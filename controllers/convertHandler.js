@@ -2,7 +2,7 @@ const mathjs = require('mathjs');
 function ConvertHandler() {
   
   this.getNum = function(input) {
-    let result = "1";
+    let result = "";
     let extraSlash = false;
     for(let i=0;i<input.length;i++){
       if(input[i]!='.' && input[i]!='/' && (input[i] < '0' || input[i]>'9') ){
@@ -13,7 +13,8 @@ function ConvertHandler() {
         extraSlash = true;
       }
       else if(extraSlash && input[i] == '/'){
-        console.error("Double-fraction Error");
+        //console.error("Double-fraction Error");
+        return "invalid number";
       }
 
       if(input[i] != " ")
@@ -21,10 +22,20 @@ function ConvertHandler() {
         result += input[i];
       }
     }
+
+    if(extraSlash){
+      val = result.split('/');
+      //console.log(val);
+      return val[0]/val[1];
+    }
+    else if(result == ""){
+      result = "1";
+    }
     return result;
   };
   
   this.getUnit = function(input) {
+    let unitsAvailable = ['gal','l','L','lbs','kg','km','mi'];
     let result = "";
     let startUnit = false;
      for(let i=0;i<input.length;i++){
@@ -42,6 +53,17 @@ function ConvertHandler() {
         result += input[i];
       }
     }
+    
+    if(result == "l" || result == "L"){
+      result = "L";
+    }
+    else{
+      result = result.toLowerCase();
+    }
+
+    if( unitsAvailable.indexOf(result) == -1 ){
+      return "invalid unit";
+    }
     return result;
   };
   
@@ -49,7 +71,7 @@ function ConvertHandler() {
     let result;
     switch(initUnit.toLowerCase()){
       case "gal":
-        result = "l";
+        result = "L";
         break;
       case "l":
         result = "gal";
@@ -75,7 +97,7 @@ function ConvertHandler() {
     let unitNames = { "km" : "kilometers", "mi" : "miles",
                     "gal": "gallons", "l":"litres",
                     "kg":"kilograms", "lbs":"pounds"};
-    let result = unitNames[unit];
+    let result = unitNames[unit.toLowerCase()];
     return result;
   };
   
@@ -84,26 +106,24 @@ function ConvertHandler() {
     const lbsToKg = 0.453592;
     const miToKm = 1.60934;
     let result;
-    let initVal = mathjs.number(mathjs.fraction(initNum));
-    console.log(initVal);
     switch(initUnit.toLowerCase()){
       case "gal":
-        result = initVal * galToL;
+        result = initNum * galToL;
         break;
       case "l":
-        result = initVal / galToL;
+        result = initNum / galToL;
         break;
       case "km":
-        result = initVal / miToKm;
+        result = initNum / miToKm;
         break;
       case "mi":
-        result = initVal * miToKm;
+        result = initNum * miToKm;
         break;
       case "lbs":
-        result = initVal * lbsToKg;
+        result = initNum * lbsToKg;
         break;
       case "kg":
-        result = initVal / lbsToKg;
+        result = initNum / lbsToKg;
         break;
     }
     return Math.round(result*100000)/100000;
@@ -112,7 +132,7 @@ function ConvertHandler() {
   this.getString = function(initNum, initUnit, returnNum, returnUnit) {
     let result = {
                   "initNum":Number(initNum),
-                  "initUnit":initUnit,
+                  "initUnit": initUnit,
                   "returnNum":returnNum,
                   "returnUnit":returnUnit,
                   "string":initNum +" "+this.spellOutUnit(initUnit)+" converts to "+returnNum+" "+this.spellOutUnit(returnUnit)

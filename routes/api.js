@@ -13,12 +13,26 @@ module.exports = function (app) {
     console.log(initNum);
     let initUnit = convertHandler.getUnit(input);
     console.log(initUnit);
-    let returnNum = convertHandler.convert(initNum,initUnit);
-    console.log(returnNum);
-    let returnUnit = convertHandler.getReturnUnit(initUnit);
-    console.log(returnUnit);
-    let stringOp=convertHandler.getString(initNum,initUnit,returnNum,returnUnit)
-    res.json(stringOp);
+
+    if(initNum == "invalid number" && initUnit!="invalid unit"){
+       res.send("invalid number");
+    }
+    else if(initNum != "invalid number" && initUnit=="invalid unit"){
+       res.send("invalid unit");
+    }
+    else if(initNum == "invalid number" && initUnit=="invalid unit"){
+       res.send("invalid number and unit");
+    }
+    else{
+      let returnNum = convertHandler.convert(initNum,initUnit);
+      console.log(returnNum);
+      let returnUnit = convertHandler.getReturnUnit(initUnit);
+      console.log(returnUnit);
+      let stringOp=convertHandler.getString(initNum,initUnit,returnNum,returnUnit)
+      res.json(stringOp);
+    }
+    
+    
   });
   
   
