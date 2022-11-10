@@ -1,3 +1,7 @@
-# Metric-Imperial Converter
+### Metric-Imperial Converter
+  - Convert gal-l, kg-lbs, mi-km and vice versa
+  - 16 Unit Test Cases for valid and invalid input using chai
+  - 5 Functional test cases using chai-http 
 
-This is the boilerplate for the Metric-Imperial Converter project. Instructions for building your project can be found at https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/metric-imperial-converter
+### Exercise 
+Instructions for building your project can be found at https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/metric-imperial-converter
